@@ -267,7 +267,7 @@ export default function Page() {
   const [lessonIndex, setLessonIndex] = useState<number | null>(null);
 
   const [includeExam, setIncludeExam] = useState(true);
-  const [examYears, setExamYears] = useState<1 | 3 | 5>(3);
+  const examYears = 4; // ✅ CỐ ĐỊNH 4 NĂM
 
   const chapters = grade ? chemistryData[String(grade)] : [];
   const lessons =
@@ -294,7 +294,19 @@ BÀI HỌC:
 - ${lessons[lessonIndex].name}
 
 YÊU CẦU:
-Thiết kế bộ slide/infographic học tập môn Hóa học (phong cách hiện đại, chuyên nghiệp, logic sư phạm, tối ưu cho tự học và luyện thi Đại học 2026).
+Thiết kế bộ slide/infographic học tập môn Hóa học theo trục:
+CẤU TẠO → TÍNH CHẤT → PHẢN ỨNG → BÀI TOÁN.
+
+Bao gồm:
+1) BẢN ĐỒ LIÊN KẾT KIẾN THỨC (CONCEPT MAP)
+2) TÓM TẮT LÝ THUYẾT TRỌNG TÂM
+3) CÔNG THỨC & PHẢN ỨNG QUAN TRỌNG
+4) DẠNG BÀI & PHƯƠNG PHÁP GIẢI
+5) BÀI TẬP LUYỆN THI 2026 (phân tầng ★→★★★★)
+6) CÂU HỎI TN THPT 4 NĂM GẦN NHẤT
+7) HƯỚNG DẪN GIẢI CHI TIẾT
+8) CHECKLIST TỰ HỌC
+9) GHI NHỚ TRONG 60 GIÂY
 ${examBlock}
 `;
 
@@ -321,30 +333,66 @@ ${examBlock}
       </header>
 
       <div style={{ maxWidth: 860, margin: "0 auto" }}>
-        {!grade && (
-          <Card title="Bước 1 – Chọn lớp">
-            <OptionList
-              items={["Lớp 10", "Lớp 11", "Lớp 12"]}
-              onSelect={(i) => setGrade(i + 10)}
-            />
+        {/* ========== CHỌN LỚP (SCROLL) ========== */}
+        <Card title="Chọn lớp">
+          <select
+            style={{ width: "100%", padding: 12, fontSize: 16 }}
+            value={grade ?? ""}
+            onChange={(e) => {
+              setGrade(Number(e.target.value));
+              setChapterIndex(null);
+              setLessonIndex(null);
+            }}
+          >
+            <option value="" disabled>
+              -- Chọn lớp --
+            </option>
+            <option value={10}>Lớp 10</option>
+            <option value={11}>Lớp 11</option>
+            <option value={12}>Lớp 12</option>
+          </select>
+        </Card>
+
+        {/* ========== CHỌN CHƯƠNG (SCROLL) ========== */}
+        {grade !== null && (
+          <Card title="Chọn chương">
+            <select
+              style={{ width: "100%", padding: 12, fontSize: 16 }}
+              value={chapterIndex ?? ""}
+              onChange={(e) => {
+                setChapterIndex(Number(e.target.value));
+                setLessonIndex(null);
+              }}
+            >
+              <option value="" disabled>
+                -- Chọn chương --
+              </option>
+              {chapters.map((c, i) => (
+                <option key={i} value={i}>
+                  {c.name}
+                </option>
+              ))}
+            </select>
           </Card>
         )}
 
-        {grade && chapterIndex === null && (
-          <Card title="Bước 2 – Chọn chương">
-            <OptionList
-              items={chapters.map((c) => c.name)}
-              onSelect={setChapterIndex}
-            />
-          </Card>
-        )}
-
-        {chapterIndex !== null && lessonIndex === null && (
-          <Card title="Bước 3 – Chọn bài">
-            <OptionList
-              items={lessons.map((l) => l.name)}
-              onSelect={setLessonIndex}
-            />
+        {/* ========== CHỌN BÀI (SCROLL) ========== */}
+        {chapterIndex !== null && (
+          <Card title="Chọn bài">
+            <select
+              style={{ width: "100%", padding: 12, fontSize: 16 }}
+              value={lessonIndex ?? ""}
+              onChange={(e) => setLessonIndex(Number(e.target.value))}
+            >
+              <option value="" disabled>
+                -- Chọn bài --
+              </option>
+              {lessons.map((l, i) => (
+                <option key={i} value={i}>
+                  {l.name}
+                </option>
+              ))}
+            </select>
           </Card>
         )}
 
@@ -358,20 +406,6 @@ ${examBlock}
               />
               Bao gồm câu hỏi TN THPT
             </label>
-
-            {includeExam && (
-              <select
-                style={{ marginTop: 12 }}
-                value={examYears}
-                onChange={(e) =>
-                  setExamYears(Number(e.target.value) as 1 | 3 | 5)
-                }
-              >
-                <option value={1}>1 năm</option>
-                <option value={3}>3 năm</option>
-                <option value={5}>5 năm</option>
-              </select>
-            )}
 
             <button
               onClick={handleGenerate}
