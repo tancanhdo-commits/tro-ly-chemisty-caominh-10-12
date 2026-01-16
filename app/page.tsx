@@ -205,6 +205,8 @@ const chemistryData: Record<string, Chapter[]> = {
 };
 
 /* ================== UI HELPERS ================== */
+import { useState } from "react";
+
 function Card({
   title,
   children
@@ -218,7 +220,7 @@ function Card({
         marginBottom: 24,
         padding: 24,
         borderRadius: 20,
-        background: "rgba(255,255,255,0.12)"
+        background: "rgba(255,255,255,0.08)"
       }}
     >
       <h2 style={{ fontSize: 22, fontWeight: 700, color: "#80d8ff" }}>
@@ -228,47 +230,6 @@ function Card({
     </div>
   );
 }
-
-function OptionList({
-  items,
-  onSelect
-}: {
-  items: string[];
-  onSelect: (i: number) => void;
-}) {
-  return (
-    <div style={{ display: "grid", gap: 12 }}>
-      {items.map((item, i) => (
-        <button
-          key={i}
-          onClick={() => onSelect(i)}
-          style={{
-            padding: "14px 18px",
-            borderRadius: 14,
-            border: "1px solid rgba(255,255,255,0.2)",
-            background: "rgba(0,0,0,0.45)",
-color: "#ffffff",
-            fontSize: 18,
-            textAlign: "left",
-            cursor: "pointer"
-          }}
-        >
-          {item}
-        </button>
-      ))}
-    </div>
-  );
-}
-
-const formulaStyle = {
-  background: "rgba(255, 255, 255, 0.12)",
-  borderLeft: "5px solid #ff9800",
-  padding: "14px 16px",
-  borderRadius: 10,
-  fontFamily: "monospace",
-  color: "#e3f2fd"
-};
-
 
 /* ================== PAGE ================== */
 export default function Page() {
@@ -296,7 +257,7 @@ III. CÂU HỎI ĐÃ RA TRONG ĐỀ THI TN THPT (${examYears} NĂM GẦN ĐÂY)
       : "";
 
     const prompt = `
-Bạn là giáo viên Hóa học THPT, chuyên luyện thi TN THPT.
+Bạn là giáo viên Hóa học THPT, chuyên luyện thi TN THPT môn Hóa với hơn 10 năm kinh nghiệm.
 
 BÀI HỌC:
 - Lớp ${grade}
@@ -315,13 +276,24 @@ Bao gồm:
 5) BÀI TẬP LUYỆN THI 2026 (phân tầng ★→★★★★)
 6) CÂU HỎI TN THPT 4 NĂM GẦN NHẤT
 7) HƯỚNG DẪN GIẢI CHI TIẾT
-8) CHECKLIST TỰ HỌC
-9) GHI NHỚ TRONG 60 GIÂY
+8) GHI NHỚ TRONG 60 GIÂY
 ${examBlock}
 `;
 
     await navigator.clipboard.writeText(prompt);
     window.open("https://www.canva.com/ai/code", "_blank");
+  };
+
+  // ===== STYLE CHO SELECT (NỀN SÁNG, CHỮ TỐI, DỄ NHÌN) =====
+  const selectStyle: React.CSSProperties = {
+    width: "100%",
+    padding: 12,
+    fontSize: 16,
+    borderRadius: 10,
+    border: "1px solid rgba(255,255,255,0.4)",
+    background: "#e3f2fd", // nền sáng
+    color: "#0b0f2a", // chữ tối
+    cursor: "pointer"
   };
 
   return (
@@ -330,43 +302,24 @@ ${examBlock}
         minHeight: "100vh",
         padding: 40,
         background:
-  "radial-gradient(circle at top,#0f172a 0%,#020617 55%,#020617 100%)",
-fontFamily: "system-ui",
-color: "#f1f5f9"   // chữ sáng hơn, tương phản tốt hơn
-
+          "radial-gradient(circle at top,#1a237e 0%,#0b0f2a 50%,#050816 100%)",
+        fontFamily: "system-ui",
+        color: "#e3f2fd"
       }}
     >
       <header style={{ textAlign: "center", marginBottom: 40 }}>
         <h1 style={{ fontSize: 42 }}>⚛ Chemistry AI Assistant</h1>
         <p style={{ fontSize: 20, color: "#ffd54f" }}>
           Công cụ tạo worksheet ôn thi TN THPT – Môn Hóa
-          Giáo viên:
         </p>
-        {/* 🌍 QUẢ ĐỊA CẦU BAY (BACKGROUND) */}
-<div
-  style={{
-    position: "fixed",
-    top: "10%",
-    right: "5%",
-    width: 180,
-    height: 180,
-    borderRadius: "50%",
-    background:
-      "radial-gradient(circle at 30% 30%, #e3f2fd, #64b5f6, #1e40af)",
-    boxShadow: "0 0 40px rgba(100, 181, 246, 0.6)",
-    animation: "float 6s ease-in-out infinite",
-    opacity: 0.85,
-    zIndex: -1
-  }}
-/>
-
       </header>
 
       <div style={{ maxWidth: 860, margin: "0 auto" }}>
-        {/* ========== CHỌN LỚP (SCROLL) ========== */}
+        {/* ========== CHỌN LỚP (CÓ THỂ LĂN CHUỘT) ========== */}
         <Card title="Chọn lớp">
           <select
-            style={{ width: "100%", padding: 12, fontSize: 16 }}
+            size={3}
+            style={selectStyle}
             value={grade ?? ""}
             onChange={(e) => {
               setGrade(Number(e.target.value));
@@ -383,11 +336,12 @@ color: "#f1f5f9"   // chữ sáng hơn, tương phản tốt hơn
           </select>
         </Card>
 
-        {/* ========== CHỌN CHƯƠNG (SCROLL) ========== */}
+        {/* ========== CHỌN CHƯƠNG (CÓ THỂ LĂN CHUỘT) ========== */}
         {grade !== null && (
           <Card title="Chọn chương">
             <select
-              style={{ width: "100%", padding: 12, fontSize: 16 }}
+              size={6}
+              style={selectStyle}
               value={chapterIndex ?? ""}
               onChange={(e) => {
                 setChapterIndex(Number(e.target.value));
@@ -406,11 +360,12 @@ color: "#f1f5f9"   // chữ sáng hơn, tương phản tốt hơn
           </Card>
         )}
 
-        {/* ========== CHỌN BÀI (SCROLL) ========== */}
+        {/* ========== CHỌN BÀI (CÓ THỂ LĂN CHUỘT) ========== */}
         {chapterIndex !== null && (
           <Card title="Chọn bài">
             <select
-              style={{ width: "100%", padding: 12, fontSize: 16 }}
+              size={8}
+              style={selectStyle}
               value={lessonIndex ?? ""}
               onChange={(e) => setLessonIndex(Number(e.target.value))}
             >
