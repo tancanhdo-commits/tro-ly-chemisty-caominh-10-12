@@ -2,11 +2,10 @@
 
 import { useState } from "react";
 
-/* ================== TYPES ================== */
+/* ================== DATA HÓA ================== */
 type Lesson = { name: string };
 type Chapter = { name: string; lessons: Lesson[] };
 
-/* ================== DATA ================== */
 const chemistryData: Record<string, Chapter[]> = {
   /* ================== LỚP 10 ================== */
   "10": [
@@ -204,9 +203,7 @@ const chemistryData: Record<string, Chapter[]> = {
   ]
 };
 
-/* ================== UI HELPERS ================== */
-import { useState } from "react";
-
+/* ================== UI COMPONENT ================== */
 function Card({
   title,
   children
@@ -236,9 +233,8 @@ export default function Page() {
   const [grade, setGrade] = useState<number | null>(null);
   const [chapterIndex, setChapterIndex] = useState<number | null>(null);
   const [lessonIndex, setLessonIndex] = useState<number | null>(null);
-
   const [includeExam, setIncludeExam] = useState(true);
-  const examYears = 4; // ✅ CỐ ĐỊNH 4 NĂM
+  const examYears = 4;
 
   const chapters = grade ? chemistryData[String(grade)] : [];
   const lessons =
@@ -257,7 +253,7 @@ III. CÂU HỎI ĐÃ RA TRONG ĐỀ THI TN THPT (${examYears} NĂM GẦN ĐÂY)
       : "";
 
     const prompt = `
-Bạn là giáo viên Hóa học THPT, chuyên luyện thi TN THPT môn Hóa với hơn 10 năm kinh nghiệm.
+Bạn là giáo viên Hóa học THPT, chuyên luyện thi TN THPT.
 
 BÀI HỌC:
 - Lớp ${grade}
@@ -284,16 +280,15 @@ ${examBlock}
     window.open("https://www.canva.com/ai/code", "_blank");
   };
 
-  // ===== STYLE CHO SELECT (NỀN SÁNG, CHỮ TỐI, DỄ NHÌN) =====
   const selectStyle: React.CSSProperties = {
     width: "100%",
     padding: 12,
     fontSize: 16,
     borderRadius: 10,
     border: "1px solid rgba(255,255,255,0.4)",
-    background: "#e3f2fd", // nền sáng
-    color: "#0b0f2a", // chữ tối
-    cursor: "pointer"
+    background: "#e3f2fd",
+    color: "#0b0f2a",
+    cursor: "pointer",
   };
 
   return (
@@ -304,7 +299,7 @@ ${examBlock}
         background:
           "radial-gradient(circle at top,#1a237e 0%,#0b0f2a 50%,#050816 100%)",
         fontFamily: "system-ui",
-        color: "#e3f2fd"
+        color: "#e3f2fd",
       }}
     >
       <header style={{ textAlign: "center", marginBottom: 40 }}>
@@ -315,7 +310,6 @@ ${examBlock}
       </header>
 
       <div style={{ maxWidth: 860, margin: "0 auto" }}>
-        {/* ========== CHỌN LỚP (CÓ THỂ LĂN CHUỘT) ========== */}
         <Card title="Chọn lớp">
           <select
             size={3}
@@ -336,7 +330,6 @@ ${examBlock}
           </select>
         </Card>
 
-        {/* ========== CHỌN CHƯƠNG (CÓ THỂ LĂN CHUỘT) ========== */}
         {grade !== null && (
           <Card title="Chọn chương">
             <select
@@ -360,7 +353,6 @@ ${examBlock}
           </Card>
         )}
 
-        {/* ========== CHỌN BÀI (CÓ THỂ LĂN CHUỘT) ========== */}
         {chapterIndex !== null && (
           <Card title="Chọn bài">
             <select
@@ -402,7 +394,7 @@ ${examBlock}
                 fontWeight: 800,
                 borderRadius: 16,
                 border: "none",
-                background: "linear-gradient(90deg,#00e5ff,#00c853)"
+                background: "linear-gradient(90deg,#00e5ff,#00c853)",
               }}
             >
               🚀 Generate Worksheet
@@ -410,6 +402,16 @@ ${examBlock}
           </Card>
         )}
       </div>
+
+      <style jsx global>{`
+        select option {
+          background: #1a237e;
+          color: #ff1744;
+        }
+        select option:hover {
+          background: #283593;
+        }
+      `}</style>
     </main>
   );
 }
