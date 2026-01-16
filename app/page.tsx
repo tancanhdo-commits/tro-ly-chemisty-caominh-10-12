@@ -218,7 +218,7 @@ function Card({
         marginBottom: 24,
         padding: 24,
         borderRadius: 20,
-        background: "rgba(255,255,255,0.08)"
+        background: "rgba(255,255,255,0.12)"
       }}
     >
       <h2 style={{ fontSize: 22, fontWeight: 700, color: "#80d8ff" }}>
@@ -246,8 +246,8 @@ function OptionList({
             padding: "14px 18px",
             borderRadius: 14,
             border: "1px solid rgba(255,255,255,0.2)",
-            background: "rgba(0,0,0,0.25)",
-            color: "#e3f2fd",
+            background: "rgba(0,0,0,0.45)",
+color: "#ffffff",
             fontSize: 18,
             textAlign: "left",
             cursor: "pointer"
@@ -259,6 +259,16 @@ function OptionList({
     </div>
   );
 }
+
+const formulaStyle = {
+  background: "rgba(255, 255, 255, 0.12)",
+  borderLeft: "5px solid #ff9800",
+  padding: "14px 16px",
+  borderRadius: 10,
+  fontFamily: "monospace",
+  color: "#e3f2fd"
+};
+
 
 /* ================== PAGE ================== */
 export default function Page() {
@@ -320,16 +330,36 @@ ${examBlock}
         minHeight: "100vh",
         padding: 40,
         background:
-          "radial-gradient(circle at top,#1a237e 0%,#0b0f2a 50%,#050816 100%)",
-        fontFamily: "system-ui",
-        color: "#e3f2fd"
+  "radial-gradient(circle at top,#0f172a 0%,#020617 55%,#020617 100%)",
+fontFamily: "system-ui",
+color: "#f1f5f9"   // chữ sáng hơn, tương phản tốt hơn
+
       }}
     >
       <header style={{ textAlign: "center", marginBottom: 40 }}>
         <h1 style={{ fontSize: 42 }}>⚛ Chemistry AI Assistant</h1>
         <p style={{ fontSize: 20, color: "#ffd54f" }}>
           Công cụ tạo worksheet ôn thi TN THPT – Môn Hóa
+          Giáo viên:
         </p>
+        {/* 🌍 QUẢ ĐỊA CẦU BAY (BACKGROUND) */}
+<div
+  style={{
+    position: "fixed",
+    top: "10%",
+    right: "5%",
+    width: 180,
+    height: 180,
+    borderRadius: "50%",
+    background:
+      "radial-gradient(circle at 30% 30%, #e3f2fd, #64b5f6, #1e40af)",
+    boxShadow: "0 0 40px rgba(100, 181, 246, 0.6)",
+    animation: "float 6s ease-in-out infinite",
+    opacity: 0.85,
+    zIndex: -1
+  }}
+/>
+
       </header>
 
       <div style={{ maxWidth: 860, margin: "0 auto" }}>
